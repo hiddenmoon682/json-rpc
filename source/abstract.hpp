@@ -5,7 +5,7 @@
 #include <functional>
 #include "fields.hpp"
 
-namespace BaseClass
+namespace util_ns
 {
     // 用于 描述数据包 的基类
     class BaseMessage

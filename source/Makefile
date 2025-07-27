@@ -6,6 +6,6 @@
 # client: client.cpp
 # 	g++  $(CFLAG) $^ -o $@ $(LFLAG)
 test:test.cc
-	g++ $^ -o $@ -std=c++11
+	g++ $^ -o $@ -std=c++11 -ljsoncpp
 clean:
 	rm -rf test

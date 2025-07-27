@@ -18,13 +18,13 @@ namespace util_ns
 
 // 请求中的字段
 #define KEY_METHOD "method"         // 方法名称
-#define KEY_PARAMETERS "parameters" // 方法参数？
+#define KEY_PARAMS "parameters" // 方法参数？
 #define KEY_TOPIC_KEY "topic_key"   // 主题名称
 #define KEY_TOPIC_MSG "topic_msg"   // 主题信息
 #define KEY_OPTYPE "optype"         // 主题操作类型
 #define KEY_HOST "host"             // 主机名称
-#define KEY_IP "ip"                 // 主机ip地址
-#define KEY_PORT "port"             // 主机端口
+#define KEY_HOST_IP "ip"                 // 主机ip地址
+#define KEY_HOST_PORT "port"             // 主机端口
 
 // 响应字段
 #define KEY_RCODE "rcode"   // 响应码

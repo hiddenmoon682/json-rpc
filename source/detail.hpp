@@ -219,7 +219,7 @@ namespace util_ns
 
 namespace util_ns
 {
-    class JsonUtil
+    class JSON
     {
     public:
         static bool Serialize(const Json::Value &root, std::string &str)
