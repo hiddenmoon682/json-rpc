@@ -64,7 +64,6 @@ namespace util_ns
         virtual void retrieveInt32() = 0;
         // 获取并删除前4个字节的内容
         virtual int32_t readInt32() = 0;
-        ;
         // 从缓冲区中取出指定长度的字符串
         virtual std::string retrieveAsString(size_t len) = 0;
     };
@@ -104,7 +103,7 @@ namespace util_ns
     // 用于 描述服务器Server 的基类
     class BaseServer
     {
-    private:
+    protected:
         ConnectionCallback _cb_connection; // 连接建立的回调函数
         CloseCallback _cb_close;           // 连接断开的回调函数
         MessageCallback _cb_message;       // 收到消息的回调函数
@@ -131,7 +130,7 @@ namespace util_ns
     // 用于 描述客户端Client 的基类
     class BaseClient
     {
-    private:
+    protected:
         ConnectionCallback _cb_connection; // 连接建立的回调函数
         CloseCallback _cb_close;           // 连接断开的回调函数
         MessageCallback _cb_message;       // 收到消息的回调函数
