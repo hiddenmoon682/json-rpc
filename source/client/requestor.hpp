@@ -12,6 +12,8 @@ namespace util_ns
         // 那么就可能无法确认哪个响应是针对哪个请求的，因此在报文中设置了ID字段，保证请求和响应中的ID字段相同，
         // 同时客户端就需要对自己发送出去的请求使用ID进行管理，保证请求响应一一对应
         // Requestor类就是客户端用于管理请求的
+
+        // 需要注意的是Requestor是管理所有request请求的，不知包括rpcrequest，还包含了其他的request
         class Requestor
         {
         public:

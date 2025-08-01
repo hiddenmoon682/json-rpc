@@ -405,6 +405,7 @@ namespace util_ns
     class MessageFactory 
     {
     public:
+        // 这里返回的只是一个BaseMessage::ptr, 它是无法调用子类的方法的
         static BaseMessage::ptr create(MType mtype)
         {
             switch (mtype)
@@ -419,6 +420,7 @@ namespace util_ns
             return BaseMessage::ptr();
         }
 
+        // 这里返回的直接是一个 std::shared_ptr<T>, 也就是子类的智能指针，可以调用子类方法
         template<typename T, typename ...Args>
         static std::shared_ptr<T> create(Args&& ...args) 
         {
