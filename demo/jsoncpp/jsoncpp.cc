@@ -5,6 +5,8 @@
 
 #include <jsoncpp/json/json.h>
 
+using namespace std;
+
 bool Serialize(const Json::Value &root, std::string &str)
 {
     Json::StreamWriterBuilder swb;
@@ -38,14 +40,14 @@ bool UnSerialize(const std::string &str, Json::Value &root)
 int main()
 {
     Json::Value v;
-    v["name"] = "chen";
-    std::string str;
-    Serialize(v, str);
-    std::cout << str << std::endl;
+    v = 36;
+    v = "hello";
 
-    Json::Value nv;
-    UnSerialize(str, nv);
-    std::cout << nv["name"].asString() << std::endl;
+    std::string res;
+    Serialize(v, res);
+
+    cout << res << endl;
+    cout << v.isString() << endl;
 
     return 0;
 }
