@@ -49,7 +49,7 @@ namespace util_ns
                 if(rdp->rtype == RType::REQ_ASYNC)
                 {   
                     // ....还没有进行真正的处理
-                    rdp->response.set_value(msg);   // 设置
+                    rdp->response.set_value(msg);   // 设置好future的值
                 }
                 // 如果设置的是回调处理
                 else if(rdp->rtype == RType::REQ_CALLBACK)

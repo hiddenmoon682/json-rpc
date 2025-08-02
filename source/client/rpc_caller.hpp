@@ -15,6 +15,11 @@ namespace util_ns
         private:
             Requestor::ptr _requestor;
         public:
+            // Requestor由上层构建，因为它还需要用来初始化其他管理请求的类
+            RpcCaller(const Requestor::ptr& requestor)
+                : _requestor(requestor)
+            {}
+
             // 这里采用异步调用来获取结果
             // 第一个参数是连接，第二个参数是方法名，第三个参数是方法的参数，第四个方法是future异步保存响应结果
             bool call(const BaseConnection::ptr& conn, const std::string& method, 

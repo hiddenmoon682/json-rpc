@@ -2,51 +2,55 @@
 #include "./common/message.hpp"
 #include "./common/net.hpp"
 #include "./common/dispatcher.hpp"
+#include "./client/requestor.hpp"
+#include "./client/rpc_caller.hpp"
 #include <thread>
 
 using namespace util_ns;
 using namespace std;
 
-void onRpcRespnse(const BaseConnection::ptr &conn, RpcResponse::ptr &msg)
-{
-    cout << msg->serialize() << endl;
-    LOG(INFO, "成功接收\n");
-}
 
-//////////////////////////////// 
-//      待测试Dispatcher     ///
-///////////////////////////////
-
+// 测试rpcCaller的三种rpc请求call方法
 int main()
 {
-    std::shared_ptr<util_ns::RpcRequest> rrp = util_ns::MessageFactory::create<util_ns::RpcRequest>();
+    // 不需要构建请求，只需要提供参数，caller会自己根据参数构建请求
+    // 构建Requestor
+    std::shared_ptr<client::Requestor> requestor = std::make_shared<client::Requestor>();
+    // 构建Caller
+    std::shared_ptr<client::RpcCaller> Caller = std::make_shared<client::RpcCaller>(requestor);
 
-    rrp->setMethod("news");
+    // 构建DisPatcher
+    std::shared_ptr<Dispatcher> dsp = std::make_shared<Dispatcher>();
+
+    // 将Requestor中的onResponse设置进Dispatcher
+    auto onRpcResponse = std::bind(&client::Requestor::onResponse, requestor.get(), std::placeholders::_1, std::placeholders::_2);
+    dsp->registerHandler<BaseMessage>(MType::RSP_RPC, onRpcResponse);
+
+    // 将Dispatcher中的onResponse设置进client
+    auto message_cb = std::bind(&Dispatcher::onMessage, dsp.get(), std::placeholders::_1, std::placeholders::_2);
+    auto client = ClientFactory::create("127.0.0.1",8080);
+    client->setMessageCallback(message_cb);
+    client->connect();
+
+    // 获取client的连接
+    auto conn = client->connection();
+    // 设置方法名称和参数
+    std::string name = "Add";
     Json::Value val;
     val["num1"] = 11;
     val["num2"] = 22;
-    rrp->setParms(val);
-    rrp->SetId("1111");
-    rrp->SetMytype(MType::REQ_RPC);
+    // 定义用于接收结果的变量
+    Json::Value result;
+    // 发起同步请求
+    Caller->call(conn, name, val, result);
 
-    cout << rrp->check() << endl;
-
-    std::shared_ptr<Dispatcher> dsp = std::make_shared<Dispatcher>();
-    dsp->registerHandler<RpcResponse>(MType::RSP_RPC, onRpcRespnse);
-
-    auto message_cb = std::bind(&Dispatcher::onMessage, dsp.get(), std::placeholders::_1, std::placeholders::_2);
-
-    auto client = ClientFactory::create("127.0.0.1",8080);
-
-    client->setMessageCallback(message_cb);
-    client->connect();
-    client->send(rrp);
+    LOG(DEBUG, "result = %d\n", result.asInt());
 
     std::this_thread::sleep_for(std::chrono::seconds(10));
 
     client->shutdown();
 
-    LOG(INFO, "安全结束\n");
+    LOG(DEBUG, "安全结束\n");
 
     return 0;
 }
