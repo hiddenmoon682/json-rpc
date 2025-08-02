@@ -26,6 +26,7 @@ int main()
     desc_factory->setMethodName("Add");
     desc_factory->setParamsDesc("num1", server::VType::INTEGRAL);
     desc_factory->setParamsDesc("num2", server::VType::INTEGRAL);
+    desc_factory->setReturnType(server::VType::INTEGRAL);
     desc_factory->setCallback(Add);
     // 向RpcRouter中注册RpcRequest请求回调函数
     router->registerMethod(desc_factory->build());

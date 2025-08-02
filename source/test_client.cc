@@ -9,6 +9,10 @@
 using namespace util_ns;
 using namespace std;
 
+void JsonCallback(const Json::Value& val)
+{
+    LOG(DEBUG, "result = %d\n", val.asInt());
+}
 
 // 测试rpcCaller的三种rpc请求call方法
 int main()
@@ -46,11 +50,28 @@ int main()
 
     LOG(DEBUG, "result = %d\n", result.asInt());
 
+    // 发起异步请求
+    // auto fresult = std::make_shared<std::future<Json::Value>>();
+    // std::future<Json::Value> fresult;
+    client::RpcCaller::JsonAsyncResponse fresult;
+    val["num1"] = 33;
+    val["num2"] = 44;
+    Caller->call(conn, name, val, fresult);
+    LOG(DEBUG, "-----------4-----------\n");
+    result = fresult.get();
+    LOG(DEBUG, "fresult = %d\n", result.asInt());
+    LOG(DEBUG, "-----------5-----------\n");
+    // 发起回调方法请求
+    val["num1"] = 11;
+    val["num2"] = 77;
+    Caller->call(conn, name, val, JsonCallback);
+    LOG(DEBUG, "-----------6-----------\n");
+
     std::this_thread::sleep_for(std::chrono::seconds(10));
 
-    client->shutdown();
-
     LOG(DEBUG, "安全结束\n");
+
+    client->shutdown();
 
     return 0;
 }

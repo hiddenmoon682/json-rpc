@@ -125,14 +125,11 @@ namespace util_ns
         {
             // |--Len--|--mtype--|--idlen--|--id--|--body--|
             std::string body = msg->serialize();
-            LOG(DEBUG, "body size = %d\n", body.size());
             std::string id = msg->rid();
             auto mtype = htonl((int32_t)msg->mtype());
             int32_t idlen = htonl(id.size());
             int32_t h_total_len = mtypeFieldsLength + idlenFieldsLength + id.size() + body.size(); // 主机字节序
             int32_t n_total_len = htonl(h_total_len);                                              // 网络字节序
-
-            LOG(DEBUG, "h_total_len = %d\n", h_total_len);
 
             std::string result;
             result.reserve(h_total_len + lenFieldsLength);

@@ -55,8 +55,7 @@ namespace util_ns
                         LOG(WARING, "参数字段完整性校验失败！%s 字段缺失!\n", desc.first.c_str());
                         return false;
                     }
-                    // 检验参数类型
-                    if(check(desc.second, param) == false)
+                    if(check(desc.second, param[desc.first]) == false)
                     {
                         LOG(WARING, "%s 参数类型校验失败!\n", desc.first.c_str());
                         return false;

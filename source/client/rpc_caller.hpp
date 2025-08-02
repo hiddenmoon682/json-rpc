@@ -32,15 +32,16 @@ namespace util_ns
                 req_msg->SetMytype(MType::REQ_RPC);
                 req_msg->setMethod(method);
                 req_msg->setParms(params);
-
+                LOG(DEBUG, "-----------1-----------\n");
                 // ...
                 auto json_promise = std::make_shared<std::promise<Json::Value>>();
                 result = json_promise->get_future();    // 建立联系
                 Requestor::RequestCallback cb = std::bind(&RpcCaller::Callback, this, json_promise, std::placeholders::_1);
-
+                LOG(DEBUG, "-----------2-----------\n");
                 // 2. 发送请求
                 // 3. 等待响应
-                bool ret = _requestor->send(conn, req_msg, cb);
+                bool ret = _requestor->send(conn, req_msg, cb); /////////////////////////////////////
+                LOG(DEBUG, "-----------3-----------\n");
                 if(ret == false)
                 {
                     LOG(FATAL, "异步Rpc请求失败!\n");
@@ -62,12 +63,14 @@ namespace util_ns
 
                 BaseMessage::ptr rsp_msg;
                 // 2. 发送请求
-                bool ret = _requestor->send(conn, req_msg, rsp_msg);
+                bool ret = _requestor->send(conn, req_msg, rsp_msg);        
                 if(ret == false)
                 {
                     LOG(FATAL, "同步Rpc请求失败!\n");
                     return false;
                 }
+                std::cout << req_msg->serialize() << std::endl;
+                LOG(DEBUG, "请求发送成功\n");
                 // 3. 等待响应
                 auto rpc_rsp_msg = std::dynamic_pointer_cast<RpcResponse>(rsp_msg);
                 if (!rpc_rsp_msg) 
@@ -77,7 +80,7 @@ namespace util_ns
                 }
                 if (rpc_rsp_msg->rcode() != RCode::RCODE_OK) 
                 {
-                    LOG(WARING, "rpc请求出错：%s", errReason(rpc_rsp_msg->rcode()));
+                    LOG(WARING, "rpc请求出错: %s\n", errReason(rpc_rsp_msg->rcode()).c_str());
                     return false;
                 }
                 result = rpc_rsp_msg->result();
@@ -138,6 +141,7 @@ namespace util_ns
                     LOG(WARING, "rpc异步请求出错：%s", errReason(rpc_rsp_msg->rcode()))
                 }
                 result->set_value(rpc_rsp_msg->result());
+                LOG(DEBUG, "promise成功设置好值了\n");
             }
         };
     };

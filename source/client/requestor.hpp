@@ -103,7 +103,7 @@ namespace util_ns
             // 回调方法处理响应(非阻塞)，回调函数自动处理
             bool send(const BaseConnection::ptr &conn, const BaseMessage::ptr &req, const RequestCallback &cb)
             {
-                RequestDescribe::ptr rdp = newDescribe(req, RType::REQ_ASYNC, cb);
+                RequestDescribe::ptr rdp = newDescribe(req, RType::REQ_CALLBACK, cb);
                 if(rdp.get() == nullptr)
                 {
                     LOG(FATAL, "构造请求描述对象失败！\n");
