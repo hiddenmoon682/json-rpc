@@ -138,9 +138,4 @@ namespace util_ns
         SERVICE_OFFLINE,
         SERVICE_UNKNOW
     };
-
-
-    
-
-
 }

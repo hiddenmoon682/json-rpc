@@ -68,6 +68,7 @@
         "iomanip": "cpp",
         "csignal": "cpp",
         "any": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "unordered_set": "cpp"
     }
 }
