@@ -1,8 +1,4 @@
-#include "./common/detail.hpp"
-#include "./common/message.hpp"
-#include "./common/net.hpp"
-#include "./common/dispatcher.hpp"
-#include "./server/rpc_router.hpp"
+#include "./server/rpc_server.hpp"
 
 using namespace util_ns;
 using namespace std;
@@ -17,32 +13,16 @@ void Add(const Json::Value& params, Json::Value& result)
 // 将rpcrouter和dispatcher联合在一起
 int main()
 {
-    // 构造Dispatcher
-    std::shared_ptr<Dispatcher> dsp = std::make_shared<Dispatcher>();
-    // 构造RpcRouter
-    std::shared_ptr<server::RpcRouter> router = std::make_shared<server::RpcRouter>();
-    // 定义SDescribe工厂类，由它来生产SDescribe
     std::unique_ptr<server::SDescribeFactory> desc_factory(new server::SDescribeFactory());
     desc_factory->setMethodName("Add");
     desc_factory->setParamsDesc("num1", server::VType::INTEGRAL);
     desc_factory->setParamsDesc("num2", server::VType::INTEGRAL);
     desc_factory->setReturnType(server::VType::INTEGRAL);
     desc_factory->setCallback(Add);
-    // 向RpcRouter中注册RpcRequest请求回调函数
-    router->registerMethod(desc_factory->build());
-
-    // bind生成合适的onRpcRequest函数
-    auto onRpcRequest = std::bind(&server::RpcRouter::onRpcRequest, router.get(), std::placeholders::_1, std::placeholders::_2);
-
-    // 向DisPatcher中注册好针对RpcRequest请求的回调方法
-    dsp->registerHandler<RpcRequest>(MType::REQ_RPC, onRpcRequest);
-    // bind好要设置进服务器里的onMessageCallback
-    auto message_cb = std::bind(&Dispatcher::onMessage, dsp.get(), std::placeholders::_1, std::placeholders::_2);
-
-    auto server = ServerFactory::create(8080);
-    server->setMessageCallback(message_cb);
-    server->start();
-
+    
+    server::RpcServer server(Address("127.0.0.1", 8888), true, Address("127.0.0.1", 8899));
+    server.registerMethod(desc_factory->build());
+    server.start();
     return 0;
 }
 

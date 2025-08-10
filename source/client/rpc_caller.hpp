@@ -32,16 +32,13 @@ namespace util_ns
                 req_msg->SetMytype(MType::REQ_RPC);
                 req_msg->setMethod(method);
                 req_msg->setParms(params);
-                LOG(DEBUG, "-----------1-----------\n");
                 // ...
                 auto json_promise = std::make_shared<std::promise<Json::Value>>();
                 result = json_promise->get_future();    // 建立联系
                 Requestor::RequestCallback cb = std::bind(&RpcCaller::Callback, this, json_promise, std::placeholders::_1);
-                LOG(DEBUG, "-----------2-----------\n");
                 // 2. 发送请求
                 // 3. 等待响应
                 bool ret = _requestor->send(conn, req_msg, cb); /////////////////////////////////////
-                LOG(DEBUG, "-----------3-----------\n");
                 if(ret == false)
                 {
                     LOG(FATAL, "异步Rpc请求失败!\n");
@@ -69,7 +66,6 @@ namespace util_ns
                     LOG(FATAL, "同步Rpc请求失败!\n");
                     return false;
                 }
-                std::cout << req_msg->serialize() << std::endl;
                 LOG(DEBUG, "请求发送成功\n");
                 // 3. 等待响应
                 auto rpc_rsp_msg = std::dynamic_pointer_cast<RpcResponse>(rsp_msg);

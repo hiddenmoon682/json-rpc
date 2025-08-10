@@ -35,7 +35,7 @@ namespace util_ns
             std::unordered_map<std::string, RequestDescribe::ptr> _request_desc;
         public:
             // 针对响应的处理
-            // 第一个参数是连接，第二个参数是响应信息
+            // 第一个参数是连接，第二个参数输入型参数，是响应信息
             void onResponse(const BaseConnection::ptr& conn, BaseMessage::ptr& msg)
             {
                 std::string rid = msg->rid();
