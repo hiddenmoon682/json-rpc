@@ -24,7 +24,17 @@ namespace util_ns
             // 请求创建主题
             bool create(const BaseConnection::ptr& conn, const std::string& key)
             {
-                return commonRequest(conn, key, TopicOptype::TOPIC_CREATE);
+                bool ret;
+                ret = commonRequest(conn, key, TopicOptype::TOPIC_CREATE);
+                if(ret)
+                {
+                    LOG(DEBUG, "主题创建成功\n");
+                }
+                else
+                {
+                    LOG(DEBUG, "主题创建失败\n");
+                }
+                return ret;
             }
 
             // 请求删除主题
@@ -41,8 +51,10 @@ namespace util_ns
                 if(ret == false)
                 {
                     delSubscribe(key);
+                    LOG(DEBUG, "主题订阅失败\n");
                     return false;
                 }
+                LOG(DEBUG, "主题订阅成功\n");
                 return true;
             }
 

@@ -1,15 +1,15 @@
 CFLAG= -std=c++11 -I ../../build/release-install-cpp11/include/
 LFLAG= -L../../build/release-install-cpp11/lib -ljsoncpp -lmuduo_net -lmuduo_base -pthread 
-all: test_server test_client test_registry
-test_server: test_server.cc
-	g++  $(CFLAG) $^ -o $@ $(LFLAG)
-test_client: test_client.cc
-	g++  $(CFLAG) $^ -o $@ $(LFLAG)
-test_registry : test_registry_server.cc
+all : test_server test_publish_client test_subscribe_client
+test_server : server.cc
+	g++  -g $(CFLAG) $^ -o $@ $(LFLAG)
+test_publish_client : publish_client.cc
+	g++  -g $(CFLAG) $^ -o $@ $(LFLAG)
+test_subscribe_client : subscribe_client.cc
 	g++  -g $(CFLAG) $^ -o $@ $(LFLAG)
 
 clean:
-	rm -rf test_server test_client test_registry
+	rm -rf test_server test_publish_client test_subscribe_client
 
 # test:test.cc
 # 	g++ $^ -o $@ -std=c++11 -ljsoncpp
